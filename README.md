@@ -11,10 +11,9 @@ Minimal Go UPnP InternetGatewayDevice library. Based on
 package main
 
 import (
+	"github.com/chinalv/go-upnp-igd"
 	"log"
 	"time"
-
-	"github.com/emersion/go-upnp-igd"
 )
 
 func main() {
@@ -22,6 +21,15 @@ func main() {
 	go func() {
 		for d := range devices {
 			log.Println(d)
+			log.Println("localIPAddress:", d.GetLocalIPAddress())
+			EIP, err := d.GetExternalIPAddress()
+			if err != nil {
+				log.Fatal(err)
+			}
+			log.Println("GetExternalIPAddress:", EIP)
+			d.AddPortMapping("tcp", 55555, 55555, "test", 30)
+			d.AddPortMapping("udp", 55555, 55555, "test", 30)
+
 		}
 	}()
 
@@ -29,6 +37,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("Clean....")
+	for d := range devices {
+		log.Println("DEL localIPAddress:", d.GetLocalIPAddress())
+		d.DeletePortMapping("tcp", 55555)
+		d.DeletePortMapping("udp", 55555)
+	}
+
 }
 ```
 
