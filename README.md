@@ -27,8 +27,19 @@ func main() {
 				log.Fatal(err)
 			}
 			log.Println("GetExternalIPAddress:", EIP)
-			d.AddPortMapping("tcp", 55555, 55555, "test", 30)
-			d.AddPortMapping("udp", 55555, 55555, "test", 30)
+			d.AddPortMapping("tcp", 5555, 5555, "test", 30)
+			d.AddPortMapping("udp", 5555, 5555, "test", 30)
+
+			time.Sleep(28 * time.Second)
+			log.Println("DEL localIPAddress:", d.GetLocalIPAddress())
+			err = d.DeletePortMapping("tcp", 5555)
+			if err != nil {
+				log.Fatal(err)
+			}
+			err = d.DeletePortMapping("udp", 5555)
+			if err != nil {
+				log.Fatal(err)
+			}
 
 		}
 	}()
@@ -36,12 +47,6 @@ func main() {
 	err := igd.Discover(devices, 30*time.Second)
 	if err != nil {
 		log.Fatal(err)
-	}
-	log.Println("Clean....")
-	for d := range devices {
-		log.Println("DEL localIPAddress:", d.GetLocalIPAddress())
-		d.DeletePortMapping("tcp", 55555)
-		d.DeletePortMapping("udp", 55555)
 	}
 
 }

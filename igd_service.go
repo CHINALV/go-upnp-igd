@@ -85,6 +85,7 @@ func (s *IGDService) DeletePortMapping(protocol Protocol, externalPort int) erro
 	body := fmt.Sprintf(tpl, s.URN, externalPort, protocol)
 
 	_, err := soapRequest(s.URL, s.URN, "DeletePortMapping", body)
+
 	return err
 }
 
